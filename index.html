@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Welcome - SubhanPlays</title>
+<style>
+    :root {
+        --profile-img: url('https://i.ibb.co/k2BGHRC1/channels4-profile.jpg');
+        --background-img1: url('https://i.ibb.co/fYDT2vGq/0ed119b4e166b0f4ce1722469292eca6.png');
+        --background-img2: url('https://i.ibb.co/7J3659Cz/giphy.gif');
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; font-family: Arial, sans-serif; }
+    body, html { height:100%; width:100%; overflow:hidden; }
+
+    body {
+        display:flex; justify-content:center; align-items:center;
+        position: relative;
+        color: #fff;
+    }
+    #background {
+        position: absolute;
+        top:0; left:0; width:100%; height:100%;
+        background: var(--background-img1) center/cover no-repeat;
+        filter: blur(10px);
+        transition: background 0.5s ease-in-out;
+        z-index: -2;
+    }
+    #background-overlay {
+        position:absolute; top:0; left:0; width:100%; height:100%;
+        background: rgba(0,0,0,0.4);
+        z-index: -1;
+    }
+
+    #loading {
+        position:absolute; top:0; left:0; width:100%; height:100%;
+        display:flex; justify-content:center; align-items:center; flex-direction:column;
+        background: rgba(0,0,0,0.6); z-index: 20;
+    }
+    .spinner {
+        border: 5px solid #f3f3f3;
+        border-top: 5px solid #3498db;
+        border-radius:50%;
+        width:60px; height:60px;
+        animation: spin 1.5s linear infinite;
+        margin-bottom:15px;
+    }
+    @keyframes spin { 0% {transform:rotate(0deg);} 100% {transform:rotate(360deg);} }
+    #loading-counter { font-size: 18px; }
+
+    #welcome {
+        display:none; flex-direction:column; align-items:center; text-align:center; z-index:10;
+        animation: fadeIn 1s forwards;
+    }
+    @keyframes fadeIn { 0%{opacity:0; transform:translateY(40px);} 100%{opacity:1; transform:translateY(0);} }
+
+    #welcome .profile {
+        width:120px; height:120px; border-radius:50%; border:3px solid #fff; margin-bottom:15px;
+    }
+
+    #welcome h1 { font-size:28px; margin-bottom:10px; }
+    #welcome p { margin-bottom:20px; color:#ccc; }
+
+    .links { display:flex; flex-direction:column; align-items:center; }
+    .card-link {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        background: rgba(0,0,0,0.6);
+        border-radius: 12px;
+        padding: 12px 20px;
+        margin: 10px 0;
+        max-width: 300px;
+        text-decoration: none;
+        color: #fff;
+        font-weight: bold;
+        transition: transform 0.3s, background 0.3s, box-shadow 0.3s;
+    }
+    .card-link img {
+        width: 32px;
+        height: 32px;
+        margin-right: 12px;
+    }
+    .card-link:hover {
+        transform: translateY(-5px);
+        background: rgba(255,255,255,0.2);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+    }
+
+    #bg-toggle {
+        position:absolute; top:20px; left:20px; padding:10px 20px; border:none;
+        background: rgba(0,0,0,0.6); color:#fff; cursor:pointer; border-radius:5px;
+        font-size:16px;
+    }
+
+    .snowflake {
+        position:absolute; top:-10px; color:white; font-size:1.2em; pointer-events:none; user-select:none;
+        animation: fall linear infinite;
+    }
+    @keyframes fall { 0% {transform: translateX(0) translateY(0);} 100% {transform: translateX(200px) translateY(100vh);} }
+
+    .click-dot {
+        position:absolute; width:25px; height:25px; background:#3498db; border-radius:50%;
+        transform:scale(0); animation: clickAnim 0.6s forwards;
+    }
+    @keyframes clickAnim { 0%{scale:0; opacity:1;}50%{scale:2; opacity:0.7;}100%{scale:3; opacity:0;} }
+</style>
+</head>
+<body>
+
+<div id="background"></div>
+<div id="background-overlay"></div>
+
+<div id="loading">
+    <div class="spinner"></div>
+    <div id="loading-counter">Loading: 0s</div>
+</div>
+
+<div id="welcome">
+    <img class="profile" src="https://i.ibb.co/k2BGHRC1/channels4-profile.jpg" alt="Profile">
+    <h1>@SubhanPlays</h1>
+    <p>🎮 Gamer • Creator • Community</p>
+    <div class="links">
+        <a href="https://youtube.com/@notsubhanplayz" target="_blank" class="card-link">
+            <img src="https://img.icons8.com/fluency/48/youtube-play.png" alt="YouTube">
+            <span>YouTube</span>
+        </a>
+        <a href="https://github.com/SubhanPlays" target="_blank" class="card-link">
+            <img src="https://img.icons8.com/fluency/48/github.png" alt="TikTok">
+            <span>Github</span>
+        </a>
+        <a href="https://discord.gg/Jx6Fpdu7Mz" target="_blank" class="card-link">
+            <img src="https://img.icons8.com/fluency/48/discord-logo.png" alt="Discord">
+            <span>Discord</span>
+        </a>
+    </div>
+</div>
+
+<button id="bg-toggle">Change Background</button>
+
+<script>
+let seconds = 0;
+const loadingCounter = document.getElementById('loading-counter');
+const loadingScreen = document.getElementById('loading');
+const welcomeScreen = document.getElementById('welcome');
+const background = document.getElementById('background');
+
+let timer = setInterval(() => { 
+    seconds++; 
+    loadingCounter.textContent = `Loading: ${seconds}s`; 
+}, 1000);
+
+setTimeout(() => {
+    clearInterval(timer);
+    loadingScreen.style.display = 'none';
+    welcomeScreen.style.display = 'flex';
+}, 3000);
+
+let bgToggle = false;
+document.getElementById('bg-toggle').addEventListener('click', () => {
+    background.style.backgroundImage = bgToggle ? 'var(--background-img1)' : 'var(--background-img2)';
+    bgToggle = !bgToggle;
+});
+
+function createSnow() {
+    const snow = document.createElement('div');
+    snow.className = 'snowflake';
+    snow.innerHTML = '&#10052;';
+    snow.style.left = Math.random() * 100 + 'vw';
+    snow.style.animationDuration = 5 + Math.random()*5 + 's';
+    document.body.appendChild(snow);
+    setTimeout(()=>snow.remove(),10000);
+}
+setInterval(createSnow,200);
+
+document.body.addEventListener('click', (e)=>{
+    const dot = document.createElement('div');
+    dot.className='click-dot';
+    dot.style.left = e.pageX-12+'px';
+    dot.style.top = e.pageY-12+'px';
+    document.body.appendChild(dot);
+    setTimeout(()=>dot.remove(),600);
+});
+</script>
+
+</body>
+</html>
